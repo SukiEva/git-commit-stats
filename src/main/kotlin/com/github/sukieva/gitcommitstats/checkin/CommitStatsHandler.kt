@@ -2,15 +2,16 @@ package com.github.sukieva.gitcommitstats.checkin
 
 import com.intellij.openapi.application.EDT
 import com.intellij.openapi.diagnostic.thisLogger
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.CheckinProjectPanel
 import com.intellij.openapi.vcs.VcsException
 import com.intellij.openapi.vcs.changes.CommitContext
 import com.intellij.openapi.vcs.checkin.CheckinHandler
-import com.intellij.openapi.vcs.ui.RefreshableOnComponent
+import com.intellij.openapi.wm.WindowManager
+import com.github.sukieva.gitcommitstats.stats.CommitStats
 import com.github.sukieva.gitcommitstats.stats.CommitStatsCalculator
-import com.github.sukieva.gitcommitstats.ui.CommitStatsPanel
+import com.github.sukieva.gitcommitstats.statusbar.CommitStatsWidget
 import kotlinx.coroutines.*
-import javax.swing.JComponent
 
 class CommitStatsHandler(
     private val panel: CheckinProjectPanel,
@@ -18,29 +19,14 @@ class CommitStatsHandler(
 ) : CheckinHandler() {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-    private val statsPanel = CommitStatsPanel()
     private val calculator = CommitStatsCalculator()
     private val logger = thisLogger()
 
     private var computationJob: Job? = null
 
-    override fun getBeforeCheckinConfigurationPanel(): RefreshableOnComponent {
-        return object : RefreshableOnComponent {
-            override fun getComponent(): JComponent = statsPanel.component
-
-            override fun refresh() {
-                // Called when panel is refreshed
-                includedChangesChanged()
-            }
-
-            override fun saveState() {
-                // No settings to persist
-            }
-
-            override fun restoreState() {
-                // No settings to restore
-            }
-        }
+    init {
+        // Initial stats computation and show widget
+        includedChangesChanged()
     }
 
     override fun includedChangesChanged() {
@@ -57,7 +43,7 @@ class CommitStatsHandler(
                 val stats = calculator.computeStats(changes)
 
                 withContext(Dispatchers.EDT) {
-                    statsPanel.updateStats(stats)
+                    updateWidget(panel.project, stats, true)
                 }
             } catch (e: CancellationException) {
                 // Job was cancelled, ignore
@@ -69,12 +55,28 @@ class CommitStatsHandler(
     }
 
     override fun checkinSuccessful() {
-        // Cleanup
+        // Hide widget and cleanup
+        scope.launch(Dispatchers.EDT) {
+            updateWidget(panel.project, CommitStats(), false)
+        }
         scope.cancel()
     }
 
     override fun checkinFailed(exception: MutableList<VcsException>) {
-        // Cleanup
+        // Hide widget and cleanup
+        scope.launch(Dispatchers.EDT) {
+            updateWidget(panel.project, CommitStats(), false)
+        }
         scope.cancel()
+    }
+
+    private fun updateWidget(project: Project, stats: CommitStats, visible: Boolean) {
+        try {
+            val statusBar = WindowManager.getInstance().getStatusBar(project)
+            val widget = statusBar?.getWidget(CommitStatsWidget.ID) as? CommitStatsWidget
+            widget?.updateStats(stats, visible)
+        } catch (e: Exception) {
+            logger.warn("Failed to update status bar widget", e)
+        }
     }
 }

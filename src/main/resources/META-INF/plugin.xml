@@ -13,5 +13,9 @@
         <checkinHandlerFactory
             implementation="com.github.sukieva.gitcommitstats.checkin.CommitStatsHandlerFactory"
             order="last"/>
+        <statusBarWidgetFactory
+            implementation="com.github.sukieva.gitcommitstats.statusbar.CommitStatsWidgetFactory"
+            id="CommitStatsWidget"
+            order="after Position"/>
     </extensions>
 </idea-plugin>

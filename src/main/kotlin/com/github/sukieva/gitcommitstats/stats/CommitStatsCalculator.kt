@@ -3,10 +3,12 @@ package com.github.sukieva.gitcommitstats.stats
 import com.intellij.diff.comparison.ComparisonManager
 import com.intellij.diff.comparison.ComparisonPolicy
 import com.intellij.openapi.diagnostic.thisLogger
+import com.intellij.openapi.progress.EmptyProgressIndicator
+import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.vcs.changes.Change
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
-import kotlin.coroutines.coroutineContext
 
 data class CommitStats(
     val filesModified: Int = 0,
@@ -36,7 +38,7 @@ class CommitStatsCalculator {
         }
 
         return changes.map { change ->
-            coroutineContext.ensureActive() // Support cancellation
+            currentCoroutineContext().ensureActive() // Support cancellation
             computeChangeStats(change)
         }.reduce { acc, stats -> acc + stats }
     }
@@ -99,7 +101,8 @@ class CommitStatsCalculator {
     }
 
     private fun computeTextDiff(beforeText: String, afterText: String): CommitStats {
-        val indicator = ProgressManager.getInstance().progressIndicator
+        val indicator: ProgressIndicator = ProgressManager.getInstance().progressIndicator
+            ?: EmptyProgressIndicator()
 
         return try {
             val fragments = comparisonManager.compareLines(
