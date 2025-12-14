@@ -1,13 +1,15 @@
 package com.github.sukieva.gitcommitstats.statusbar
 
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.StatusBarWidget
 import com.intellij.openapi.wm.impl.status.EditorBasedWidget
 import com.intellij.util.Consumer
 import com.github.sukieva.gitcommitstats.stats.CommitStats
 import java.awt.event.MouseEvent
+import javax.swing.Icon
 
-class CommitStatsWidget(project: Project) : EditorBasedWidget(project), StatusBarWidget.TextPresentation {
+class CommitStatsWidget(project: Project) : EditorBasedWidget(project), StatusBarWidget.MultipleTextValuesPresentation {
 
     private var currentStats: CommitStats = CommitStats()
     private var isVisible: Boolean = false
@@ -26,7 +28,7 @@ class CommitStatsWidget(project: Project) : EditorBasedWidget(project), StatusBa
         myStatusBar?.updateWidget(ID())
     }
 
-    override fun getText(): String {
+    override fun getSelectedValue(): String {
         if (!isVisible) return ""
 
         val fileCount = currentStats.filesModified + currentStats.filesAdded + currentStats.filesDeleted
@@ -44,6 +46,15 @@ class CommitStatsWidget(project: Project) : EditorBasedWidget(project), StatusBa
         }
 
         return parts.joinToString(", ")
+    }
+
+    override fun getIcon(): Icon? {
+        if (!isVisible) return null
+
+        val fileCount = currentStats.filesModified + currentStats.filesAdded + currentStats.filesDeleted
+        if (fileCount == 0) return null
+
+        return AllIcons.General.Modified
     }
 
     override fun getTooltipText(): String? {
@@ -74,8 +85,6 @@ class CommitStatsWidget(project: Project) : EditorBasedWidget(project), StatusBa
 
         return lines.joinToString("\n")
     }
-
-    override fun getAlignment(): Float = 0.5f
 
     override fun getClickConsumer(): Consumer<MouseEvent>? = null
 }
