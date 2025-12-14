@@ -5,11 +5,13 @@
     <vendor>sukieva</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.vcs</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.sukieva.gitcommitstats.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.sukieva.gitcommitstats.startup.MyProjectActivity" />
+        <checkinHandlerFactory
+            implementation="com.github.sukieva.gitcommitstats.checkin.CommitStatsHandlerFactory"
+            order="last"/>
     </extensions>
 </idea-plugin>

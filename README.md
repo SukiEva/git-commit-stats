@@ -18,11 +18,14 @@
 - [ ] Configure the [CODECOV_TOKEN](https://docs.codecov.com/docs/quick-start) secret for automated test coverage reports on PRs
 
 <!-- Plugin description -->
-This Fancy IntelliJ Platform Plugin is going to be your implementation of the brilliant ideas that you have.
+Displays real-time statistics for uncommitted changes directly in the IntelliJ IDEA commit panel.
 
-This specific section is a source for the [plugin.xml](/src/main/resources/META-INF/plugin.xml) file which will be extracted by the [Gradle](/build.gradle.kts) during the build process.
+This plugin enhances your commit workflow by showing:
+- File counts (modified, added, deleted)
+- Line counts (additions, deletions)
+- Binary file detection
 
-To keep everything working, do not remove `<!-- ... -->` sections. 
+Statistics update automatically as you select or deselect files in the commit panel, helping you understand the scope of your changes before committing.
 <!-- Plugin description end -->
 
 ## Installation
