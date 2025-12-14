@@ -2,6 +2,7 @@ package com.github.sukieva.gitcommitstats.statusbar
 
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.popup.ListPopup
 import com.intellij.openapi.wm.StatusBarWidget
 import com.intellij.openapi.wm.impl.status.EditorBasedWidget
 import com.intellij.util.Consumer
@@ -87,4 +88,17 @@ class CommitStatsWidget(project: Project) : EditorBasedWidget(project), StatusBa
     }
 
     override fun getClickConsumer(): Consumer<MouseEvent>? = null
+
+    // Override deprecated methods to avoid warnings
+    @Deprecated("Deprecated in IntelliJ Platform")
+    override fun getMaxValue(): String {
+        // Return a representative max width string for layout calculation
+        return "999 files, +9999/-9999"
+    }
+
+    @Deprecated("Deprecated in IntelliJ Platform")
+    override fun getPopupStep(): ListPopup? {
+        // No popup functionality needed for this widget
+        return null
+    }
 }
