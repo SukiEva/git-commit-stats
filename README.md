@@ -1,33 +1,26 @@
-# git-commit-stats
+# GitCommitStats
 
 ![Build](https://github.com/SukiEva/git-commit-stats/workflows/Build/badge.svg)
 [![Version](https://img.shields.io/jetbrains/plugin/v/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
 
-## Template ToDo list
-- [x] Create a new [IntelliJ Platform Plugin Template][template] project.
-- [x Get familiar with the [template documentation][template].
-- [x] Adjust the [pluginGroup](./gradle.properties) and [pluginName](./gradle.properties), as well as the [id](./src/main/resources/META-INF/plugin.xml) and [sources package](./src/main/kotlin).
-- [x] Adjust the plugin description in `README` (see [Tips][docs:plugin-description])
-- [x] Review the [Legal Agreements](https://plugins.jetbrains.com/docs/marketplace/legal-agreements.html?from=IJPluginTemplate).
-- [ ] [Publish a plugin manually](https://plugins.jetbrains.com/docs/intellij/publishing-plugin.html?from=IJPluginTemplate) for the first time.
-- [ ] Set the `MARKETPLACE_ID` in the above README badges. You can obtain it once the plugin is published to JetBrains Marketplace.
-- [ ] Set the [Plugin Signing](https://plugins.jetbrains.com/docs/intellij/plugin-signing.html?from=IJPluginTemplate) related [secrets](https://github.com/JetBrains/intellij-platform-plugin-template#environment-variables).
-- [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html?from=IJPluginTemplate).
-- [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
-- [ ] Configure the [CODECOV_TOKEN](https://docs.codecov.com/docs/quick-start) secret for automated test coverage reports on PRs
+An IntelliJ IDEA plugin that provides real-time statistics for uncommitted changes directly in your status bar.
 
 <!-- Plugin description -->
-Displays real-time statistics for uncommitted changes directly in the IntelliJ IDEA commit panel.
+**GitCommitStats** provides real-time visibility into your uncommitted changes directly in the status bar. Know exactly what you're about to commit before you hit that commit button.
 
-This plugin enhances your commit workflow by showing:
-- File counts (modified, added, deleted)
-- Line counts (additions, deletions)
-- Binary file detection
+## Features
 
-Statistics update automatically as you select or deselect files in the commit panel, helping you understand the scope of your changes before committing.
+- **Real-time Statistics**: See file and line change counts update instantly as you select or deselect files in the commit dialog
+- **File Change Tracking**: Track modified, added, and deleted files with accurate counts
+- **Line Change Analysis**: View additions (+) and deletions (-) across all selected changes
+- **Binary File Detection**: Automatically identifies and counts binary files separately
+- **Non-Intrusive UI**: Displays statistics in the status bar with a clean, informative format
+- **Detailed Tooltips**: Hover over the status bar widget for a complete breakdown of your changes
 
-Compatible with IntelliJ IDEA 2025.3+ (both Community Edition and Ultimate Edition).
+## Compatibility
+
+Compatible with IntelliJ 2025.3+.
 <!-- Plugin description end -->
 
 ## Installation
@@ -49,8 +42,68 @@ Compatible with IntelliJ IDEA 2025.3+ (both Community Edition and Ultimate Editi
   Download the [latest release](https://github.com/SukiEva/git-commit-stats/releases/latest) and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
+## Usage
+
+1. **Open the Commit Dialog**: Use <kbd>Ctrl+K</kbd> (Windows/Linux) or <kbd>⌘K</kbd> (macOS) to open the commit dialog, or click the commit button in the toolbar
+
+2. **View Statistics**: Look at the bottom status bar. When the commit dialog is open, you'll see a widget displaying:
+   - File count (e.g., "3 files")
+   - Line changes (e.g., "+42/-15")
+   - A modification icon to indicate active changes
+
+3. **Interactive Updates**: As you select or deselect files in the commit dialog, the statistics update automatically to reflect only the selected changes
+
+4. **Detailed Breakdown**: Hover over the status bar widget to see a tooltip with detailed information:
+   - Number of modified files
+   - Number of added files
+   - Number of deleted files
+   - Number of binary files
+   - Total lines added
+   - Total lines deleted
+
+5. **Stay Informed**: Use these statistics to ensure your commits are appropriately scoped and organized
+
+### Example Display Formats
+
+- `1 file, +10/-2` - Single file with 10 additions and 2 deletions
+- `5 files, +150/-80` - Multiple files with line change summary
+- `3 files` - Files with no text changes (e.g., binary files only)
+
+## Features in Detail
+
+### Real-time Statistics
+The plugin computes statistics dynamically as you interact with the commit dialog. Select or deselect files, and watch the numbers update instantly.
+
+### Accurate Line Counting
+Using IntelliJ's built-in diff engine, the plugin provides accurate line-by-line change analysis, respecting the same comparison rules as the IDE's diff viewer.
+
+### Performance Optimized
+- **Async Computation**: Statistics are calculated in background threads to keep the UI responsive
+- **Smart Debouncing**: Rapid selection changes are intelligently batched to prevent unnecessary recalculations
+- **Graceful Degradation**: For extremely large diffs, the plugin shows file counts while skipping detailed line analysis
+
+### VCS Agnostic Design
+The plugin works with any version control system supported by IntelliJ IDEA, including:
+- Git
+- Subversion (SVN)
+- Mercurial
+- Perforce
+- And any other VCS with IntelliJ support
+
+## Development
+
+For development information, build commands, and architecture details, see [CLAUDE.md](CLAUDE.md).
+
+## License
+
+This plugin is based on the [IntelliJ Platform Plugin Template][template].
+
+## Support
+
+If you encounter any issues or have feature requests, please visit the [GitHub Issues](https://github.com/SukiEva/git-commit-stats/issues) page.
 
 ---
+
 Plugin based on the [IntelliJ Platform Plugin Template][template].
 
 [template]: https://github.com/JetBrains/intellij-platform-plugin-template
