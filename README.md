@@ -26,6 +26,8 @@ This plugin enhances your commit workflow by showing:
 - Binary file detection
 
 Statistics update automatically as you select or deselect files in the commit panel, helping you understand the scope of your changes before committing.
+
+Compatible with IntelliJ IDEA 2025.3+ (both Community Edition and Ultimate Edition).
 <!-- Plugin description end -->
 
 ## Installation

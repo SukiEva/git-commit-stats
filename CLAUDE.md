@@ -9,9 +9,10 @@ This is an IntelliJ Platform plugin project called "git-commit-stats" built usin
 **Plugin Details:**
 - Group: `com.github.sukieva.gitcommitstats`
 - Main package: `com.github.sukieva.gitcommitstats`
-- Target platform: IntelliJ IDEA 2025.2.5
-- Minimum build: 252
+- Target platform: IntelliJ IDEA 2025.3
+- Minimum build: 253
 - Language: Kotlin (JVM toolchain 21)
+- **Compatible with**: IntelliJ IDEA Community Edition and Ultimate Edition
 
 ## Build Commands
 
@@ -146,6 +147,8 @@ The project uses GitHub Actions with three workflows:
 - Gradle configuration cache is enabled
 - Kotlin stdlib is not bundled by default (kotlin.stdlib.default.dependency = false)
 - Java 21 is required
+- **Platform Support**: IntelliJ IDEA 2025.3+ (both Community and Ultimate editions)
 - The plugin depends on `com.intellij.modules.platform` and `com.intellij.modules.vcs`
+- Module dependencies work across both Community and Ultimate editions
 - Statistics are computed asynchronously with 300ms debouncing
 - VCS-agnostic implementation works with Git, SVN, Mercurial, etc.
