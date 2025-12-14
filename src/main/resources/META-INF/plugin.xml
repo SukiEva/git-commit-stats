@@ -16,6 +16,6 @@
         <statusBarWidgetFactory
             implementation="com.github.sukieva.gitcommitstats.statusbar.CommitStatsWidgetFactory"
             id="CommitStatsWidget"
-            order="after Position"/>
+            order="first"/>
     </extensions>
 </idea-plugin>
