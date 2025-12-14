@@ -2,7 +2,7 @@
 
 # git-commit-stats Changelog
 
-## [1.0.0]
+## [Unreleased]
 ### Added
 - File counts (modified, added, deleted)
 - Line counts (additions, deletions)
