@@ -1,0 +1,16 @@
+package com.github.sukieva.gitcommitstats.toolwindow
+
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.wm.ToolWindow
+import com.intellij.openapi.wm.ToolWindowFactory
+import com.intellij.ui.content.ContentFactory
+
+class CommitStatsToolWindowFactory : ToolWindowFactory {
+
+    override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
+        val commitStatsToolWindow = CommitStatsToolWindow(project)
+        val contentFactory = ContentFactory.getInstance()
+        val content = contentFactory.createContent(commitStatsToolWindow, "", false)
+        toolWindow.contentManager.addContent(content)
+    }
+}

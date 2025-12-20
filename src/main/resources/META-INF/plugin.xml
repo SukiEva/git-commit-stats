@@ -6,6 +6,7 @@
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.vcs</depends>
+    <depends>Git4Idea</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
@@ -17,5 +18,11 @@
             implementation="com.github.sukieva.gitcommitstats.statusbar.CommitStatsWidgetFactory"
             id="CommitStatsWidget"
             order="first"/>
+        <toolWindow id="GitCommitStats"
+                    anchor="bottom"
+                    icon="AllIcons.Vcs.History"
+                    factoryClass="com.github.sukieva.gitcommitstats.toolwindow.CommitStatsToolWindowFactory"/>
+        <projectService serviceImplementation="com.github.sukieva.gitcommitstats.toolwindow.service.GitQueryService"/>
+        <projectService serviceImplementation="com.github.sukieva.gitcommitstats.toolwindow.service.AuthorService"/>
     </extensions>
 </idea-plugin>
