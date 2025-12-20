@@ -4,19 +4,22 @@
 [![Version](https://img.shields.io/jetbrains/plugin/v/29370.svg)](https://plugins.jetbrains.com/plugin/29370)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/29370.svg)](https://plugins.jetbrains.com/plugin/29370)
 
-An IntelliJ IDEA plugin that provides real-time statistics for uncommitted changes directly in your status bar.
+An IntelliJ plugin that provides comprehensive Git commit statistics and real-time analysis for your projects.
 
 <!-- Plugin description -->
-**GitCommitStats** provides real-time visibility into your uncommitted changes directly in the status bar. Know exactly what you're about to commit before you hit that commit button.
+**GitCommitStats** offers powerful tools to analyze your Git commit history and track uncommitted changes in real-time.
 
 ## Features
 
+### Git Commit Statistics Tool Window
+- **Summary Statistics**: View total commits, files changed (modified/added/deleted), and lines changed at a glance
+- **Detailed Commit List**: Browse commits with sortable columns showing hash, date, message, file count, and line changes
+
+### Status Bar Statistics
 - **Real-time Statistics**: See file and line change counts update instantly as you select or deselect files in the commit dialog
 - **File Change Tracking**: Track modified, added, and deleted files with accurate counts
 - **Line Change Analysis**: View additions (+) and deletions (-) across all selected changes
 - **Binary File Detection**: Automatically identifies and counts binary files separately
-- **Non-Intrusive UI**: Displays statistics in the status bar with a clean, informative format
-- **Detailed Tooltips**: Hover over the status bar widget for a complete breakdown of your changes
 
 ## Compatibility
 
@@ -43,6 +46,29 @@ Compatible with IntelliJ 2025.3+.
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
 ## Usage
+
+### Git Commit Statistics Tool Window
+
+1. **Open the Tool Window**: Find "GitCommitStats" in the bottom tool window bar, or use <kbd>View</kbd> > <kbd>Tool Windows</kbd> > <kbd>GitCommitStats</kbd>
+
+2. **Filter by Author**:
+   - Click the author dropdown or start typing to search
+   - Supports partial matching (e.g., typing "john" matches "John Doe", "johnny@example.com")
+   - Press <kbd>Enter</kbd> or select from the filtered dropdown to apply
+
+3. **Filter by Date Range**:
+   - Use quick buttons: Today, Last 7 days, Last 30 days, Last 90 days
+   - Or manually enter custom dates in the format `yyyy-MM-dd`
+   - Click "Refresh" to apply custom date ranges
+
+4. **View Statistics**:
+   - **Summary Panel**: See total commits, files changed, and lines modified
+   - **Commit List**: Browse detailed commit information with sortable columns
+   - Click column headers to sort by hash, date, message, files, or lines
+
+5. **Auto-refresh**: Enable/disable the "Auto-refresh" checkbox to control automatic updates when filters change
+
+### Status Bar Statistics
 
 1. **Open the Commit Dialog**: Use <kbd>Ctrl+K</kbd> (Windows/Linux) or <kbd>⌘K</kbd> (macOS) to open the commit dialog, or click the commit button in the toolbar
 
