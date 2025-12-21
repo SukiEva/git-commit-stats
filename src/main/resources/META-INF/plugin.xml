@@ -24,5 +24,7 @@
                     factoryClass="com.github.sukieva.gitcommitstats.toolwindow.CommitStatsToolWindowFactory"/>
         <projectService serviceImplementation="com.github.sukieva.gitcommitstats.toolwindow.service.GitQueryService"/>
         <projectService serviceImplementation="com.github.sukieva.gitcommitstats.toolwindow.service.AuthorService"/>
+        <projectService serviceImplementation="com.github.sukieva.gitcommitstats.toolwindow.service.VcsLogNavigationService"/>
+        <notificationGroup id="Git Commit Stats" displayType="BALLOON"/>
     </extensions>
 </idea-plugin>

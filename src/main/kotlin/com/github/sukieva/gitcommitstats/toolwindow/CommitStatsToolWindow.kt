@@ -6,6 +6,7 @@ import com.github.sukieva.gitcommitstats.toolwindow.service.AuthorService
 import com.github.sukieva.gitcommitstats.toolwindow.service.CommitStatsAdapter
 import com.github.sukieva.gitcommitstats.toolwindow.service.GitQueryService
 import com.github.sukieva.gitcommitstats.toolwindow.service.StatsAggregator
+import com.github.sukieva.gitcommitstats.toolwindow.service.VcsLogNavigationService
 import com.github.sukieva.gitcommitstats.toolwindow.ui.CommitListPanel
 import com.github.sukieva.gitcommitstats.toolwindow.ui.FilterPanel
 import com.github.sukieva.gitcommitstats.toolwindow.ui.SummaryPanel
@@ -28,12 +29,13 @@ class CommitStatsToolWindow(private val project: Project) : JBPanel<JBPanel<*>>(
 
     private val gitQueryService = project.service<GitQueryService>()
     private val authorService = project.service<AuthorService>()
+    private val vcsLogNavService = project.service<VcsLogNavigationService>()
     private val adapter = CommitStatsAdapter(project)
     private val aggregator = StatsAggregator()
 
     private val filterPanel = FilterPanel(::refreshData)
     private val summaryPanel = SummaryPanel()
-    private val commitListPanel = CommitListPanel()
+    private val commitListPanel = CommitListPanel { hash -> onCommitDoubleClick(hash) }
 
     private val loadingLabel = JBLabel(MyBundle.message("toolwindow.loading"), SwingConstants.CENTER)
 
@@ -166,6 +168,12 @@ class CommitStatsToolWindow(private val project: Project) : JBPanel<JBPanel<*>>(
 
         revalidate()
         repaint()
+    }
+
+    private fun onCommitDoubleClick(hash: String) {
+        scope.launch {
+            vcsLogNavService.navigateToCommit(hash)
+        }
     }
 
     override fun dispose() {

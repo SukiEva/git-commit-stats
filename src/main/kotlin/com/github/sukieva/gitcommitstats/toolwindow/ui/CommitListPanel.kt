@@ -10,7 +10,9 @@ import javax.swing.JPanel
 import javax.swing.table.AbstractTableModel
 import javax.swing.table.TableRowSorter
 
-class CommitListPanel : JPanel() {
+class CommitListPanel(
+    private val onCommitDoubleClick: ((String) -> Unit)? = null
+) : JPanel() {
 
     private val tableModel = CommitStatsTableModel()
     private val table = JBTable(tableModel)
@@ -23,6 +25,20 @@ class CommitListPanel : JPanel() {
         // Enable sorting
         table.rowSorter = TableRowSorter(tableModel)
         table.autoCreateRowSorter = true
+
+        // Add double-click listener
+        table.addMouseListener(object : java.awt.event.MouseAdapter() {
+            override fun mouseClicked(e: java.awt.event.MouseEvent) {
+                if (e.clickCount == 2 && javax.swing.SwingUtilities.isLeftMouseButton(e)) {
+                    val viewRow = table.rowAtPoint(e.point)
+                    if (viewRow != -1) {
+                        val modelRow = table.convertRowIndexToModel(viewRow)
+                        val commitHash = tableModel.getCommitHashAt(modelRow)
+                        commitHash?.let { onCommitDoubleClick?.invoke(it) }
+                    }
+                }
+            }
+        })
     }
 
     fun updateCommits(commits: List<CommitWithStats>) {
@@ -75,6 +91,14 @@ class CommitListPanel : JPanel() {
             return when (columnIndex) {
                 3 -> Integer::class.java
                 else -> String::class.java
+            }
+        }
+
+        fun getCommitHashAt(rowIndex: Int): String? {
+            return if (rowIndex in commits.indices) {
+                commits[rowIndex].hash
+            } else {
+                null
             }
         }
     }
