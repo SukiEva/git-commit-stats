@@ -45,7 +45,7 @@ class CommitListPanel(
         tableModel.updateCommits(commits)
     }
 
-    private class CommitStatsTableModel : AbstractTableModel() {
+    internal class CommitStatsTableModel : AbstractTableModel() {
 
         private val columnNames = arrayOf(
             MyBundle.message("toolwindow.commits.column.hash"),
@@ -78,10 +78,7 @@ class CommitListPanel(
                     val message = commit.message.replace("\n", " ").trim()
                     if (message.length > 60) message.take(57) + "..." else message
                 }
-                3 -> {
-                    val total = commit.stats.filesModified + commit.stats.filesAdded + commit.stats.filesDeleted
-                    total.toString()
-                }
+                3 -> commit.stats.filesModified + commit.stats.filesAdded + commit.stats.filesDeleted
                 4 -> "+${commit.stats.linesAdded}/-${commit.stats.linesDeleted}"
                 else -> ""
             }

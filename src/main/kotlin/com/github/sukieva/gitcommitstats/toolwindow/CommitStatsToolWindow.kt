@@ -89,7 +89,7 @@ class CommitStatsToolWindow(private val project: Project) : JBPanel<JBPanel<*>>(
                         try {
                             val stats = adapter.computeStatsForCommit(commit)
                             CommitWithStats(
-                                hash = commit.id.toShortString(),
+                                hash = commit.id.asString(),
                                 author = commit.author.name,
                                 authorEmail = commit.author.email,
                                 date = Date(commit.commitTime),

@@ -11,6 +11,7 @@ class CommitStatsToolWindowFactory : ToolWindowFactory {
         val commitStatsToolWindow = CommitStatsToolWindow(project)
         val contentFactory = ContentFactory.getInstance()
         val content = contentFactory.createContent(commitStatsToolWindow, "", false)
+        content.setDisposer(commitStatsToolWindow)
         toolWindow.contentManager.addContent(content)
     }
 }
