@@ -14,6 +14,7 @@ An IntelliJ plugin that provides comprehensive Git commit statistics and real-ti
 ### Git Commit Statistics Tool Window
 - **Summary Statistics**: View total commits, files changed (modified/added/deleted), and lines changed at a glance
 - **Detailed Commit List**: Browse commits with sortable columns showing hash, date, message, file count, and line changes
+- **Quick Navigation**: Double-click any commit to instantly open it in IDEA's VCS Log window for detailed inspection
 
 ### Status Bar Statistics
 - **Real-time Statistics**: See file and line change counts update instantly as you select or deselect files in the commit dialog
@@ -66,7 +67,12 @@ Compatible with IntelliJ 2025.3+.
    - **Commit List**: Browse detailed commit information with sortable columns
    - Click column headers to sort by hash, date, message, files, or lines
 
-5. **Auto-refresh**: Enable/disable the "Auto-refresh" checkbox to control automatic updates when filters change
+5. **Navigate to Commits**:
+   - **Double-click** any commit row in the commit list
+   - The VCS Log window will automatically open and navigate to that specific commit
+   - The commit will be highlighted with a hash filter applied for easy identification
+
+6. **Auto-refresh**: Enable/disable the "Auto-refresh" checkbox to control automatic updates when filters change
 
 ### Status Bar Statistics
 

@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 ### Added
+- **Double-click Navigation**: Double-click on any commit in the Tool Window to open and navigate to that commit in IDEA's VCS Log window
+- Hash-filtered VCS Log tab automatically opens and highlights the selected commit for detailed inspection
+
+## [1.1.0]
+### Added
 - **Git Commit Statistics Tool Window**: New tool window panel for comprehensive commit analysis
 - Summary statistics panel showing total commits, files changed, and lines modified
 - Detailed commit list with sortable columns (Hash, Date, Message, Files, Lines)
