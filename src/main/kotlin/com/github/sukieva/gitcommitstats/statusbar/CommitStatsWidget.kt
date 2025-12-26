@@ -89,16 +89,9 @@ class CommitStatsWidget(project: Project) : EditorBasedWidget(project), StatusBa
 
     override fun getClickConsumer(): Consumer<MouseEvent>? = null
 
-    // Override deprecated methods to avoid warnings
-    @Deprecated("Deprecated in IntelliJ Platform")
-    override fun getMaxValue(): String {
-        // Return a representative max width string for layout calculation
-        return "999 files, +9999/-9999"
-    }
+    @Suppress("OVERRIDE_DEPRECATION")
+    override fun getMaxValue(): String = "999 files, +9999/-9999"
 
-    @Deprecated("Deprecated in IntelliJ Platform")
-    override fun getPopupStep(): ListPopup? {
-        // No popup functionality needed for this widget
-        return null
-    }
+    @Suppress("OVERRIDE_DEPRECATION")
+    override fun getPopupStep(): ListPopup? = null
 }
