@@ -7,6 +7,7 @@ import com.intellij.openapi.progress.EmptyProgressIndicator
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.vcs.changes.Change
+import com.intellij.openapi.vfs.VfsUtil
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 
@@ -48,15 +49,32 @@ class CommitStatsCalculator {
         val afterRevision = change.afterRevision
 
         return when {
-            // New file
+            // New file (including unversioned files)
             beforeRevision == null && afterRevision != null -> {
                 if (isBinaryFile(afterRevision.file.path)) {
                     CommitStats(filesAdded = 1)
                 } else {
                     try {
-                        val content = afterRevision.content ?: ""
-                        val lines = countLines(content)
-                        CommitStats(filesAdded = 1, linesAdded = lines)
+                        // For versioned files, try to get content from revision
+                        var content = afterRevision.content
+
+                        // For unversioned files, content might be null, try to read from VFS
+                        if (content == null) {
+                            val virtualFile = afterRevision.file.virtualFile
+                            if (virtualFile != null && virtualFile.isValid) {
+                                content = VfsUtil.loadText(virtualFile)
+                                logger.debug("Read unversioned file ${afterRevision.file.path} from VFS")
+                            }
+                        }
+
+                        if (content != null) {
+                            val lines = countLines(content)
+                            logger.debug("Computed stats for file ${afterRevision.file.path}: $lines lines")
+                            CommitStats(filesAdded = 1, linesAdded = lines)
+                        } else {
+                            logger.warn("Could not read content for file ${afterRevision.file.path}")
+                            CommitStats(filesAdded = 1)
+                        }
                     } catch (e: Exception) {
                         logger.warn("Failed to get content for new file ${afterRevision.file.path}", e)
                         CommitStats(filesAdded = 1)
