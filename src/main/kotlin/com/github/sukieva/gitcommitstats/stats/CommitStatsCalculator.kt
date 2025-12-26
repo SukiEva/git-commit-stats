@@ -44,6 +44,10 @@ class CommitStatsCalculator {
         }.reduce { acc, stats -> acc + stats }
     }
 
+    fun computeStatsForChange(change: Change): CommitStats {
+        return computeChangeStats(change)
+    }
+
     private fun computeChangeStats(change: Change): CommitStats {
         val beforeRevision = change.beforeRevision
         val afterRevision = change.afterRevision
