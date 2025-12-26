@@ -148,15 +148,18 @@ class FilterPanel(
 
     private fun updateComboBoxItems(items: List<String>) {
         isUpdating = true
-        val currentText = (authorComboBox.editor.editorComponent as? JTextComponent)?.text ?: ""
+        try {
+            val currentText = (authorComboBox.editor.editorComponent as? JTextComponent)?.text ?: ""
 
-        authorComboBox.removeAllItems()
-        authorComboBox.addItem("")  // Empty option for "All authors"
-        items.forEach { authorComboBox.addItem(it) }
+            authorComboBox.removeAllItems()
+            authorComboBox.addItem("")  // Empty option for "All authors"
+            items.forEach { authorComboBox.addItem(it) }
 
-        // Restore the text in the editor
-        (authorComboBox.editor.editorComponent as? JTextComponent)?.text = currentText
-        isUpdating = false
+            // Restore the text in the editor
+            (authorComboBox.editor.editorComponent as? JTextComponent)?.text = currentText
+        } finally {
+            isUpdating = false
+        }
     }
 
     private fun setQuickRange(daysAgo: Int) {
@@ -184,9 +187,23 @@ class FilterPanel(
 
     fun setAuthors(authors: List<String>) {
         allAuthors = authors
-        authorComboBox.removeAllItems()
-        authorComboBox.addItem("")  // Empty option for "All authors"
-        authors.forEach { authorComboBox.addItem(it) }
+
+        // Preserve current selection
+        val currentSelection = authorComboBox.selectedItem
+
+        isUpdating = true
+        try {
+            authorComboBox.removeAllItems()
+            authorComboBox.addItem("")  // Empty option for "All authors"
+            authors.forEach { authorComboBox.addItem(it) }
+
+            // Restore selection if it was valid
+            if (currentSelection != null && (currentSelection in authors || currentSelection == "")) {
+                authorComboBox.selectedItem = currentSelection
+            }
+        } finally {
+            isUpdating = false
+        }
     }
 
     private fun triggerFilterChange() {
