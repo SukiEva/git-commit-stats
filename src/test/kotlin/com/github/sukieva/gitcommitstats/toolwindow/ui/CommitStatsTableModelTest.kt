@@ -23,10 +23,10 @@ class CommitStatsTableModelTest {
 
         model.updateCommits(listOf(commit))
 
-        val value = model.getValueAt(0, 3)
+        val value = model.getValueAt(0, 5)
 
         assertTrue(value is Int)
         assertEquals(3, value)
-        assertEquals(Integer::class.java, model.getColumnClass(3))
+        assertEquals(Integer::class.java, model.getColumnClass(5))
     }
 }

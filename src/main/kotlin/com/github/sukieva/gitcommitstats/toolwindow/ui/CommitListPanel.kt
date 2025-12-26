@@ -49,6 +49,8 @@ class CommitListPanel(
 
         private val columnNames = arrayOf(
             MyBundle.message("toolwindow.commits.column.hash"),
+            MyBundle.message("toolwindow.commits.column.author"),
+            MyBundle.message("toolwindow.commits.column.email"),
             MyBundle.message("toolwindow.commits.column.date"),
             MyBundle.message("toolwindow.commits.column.message"),
             MyBundle.message("toolwindow.commits.column.files"),
@@ -73,20 +75,22 @@ class CommitListPanel(
             val commit = commits[rowIndex]
             return when (columnIndex) {
                 0 -> commit.hash.take(8)
-                1 -> dateFormat.format(commit.date)
-                2 -> {
+                1 -> commit.author
+                2 -> commit.authorEmail
+                3 -> dateFormat.format(commit.date)
+                4 -> {
                     val message = commit.message.replace("\n", " ").trim()
                     if (message.length > 60) message.take(57) + "..." else message
                 }
-                3 -> commit.stats.filesModified + commit.stats.filesAdded + commit.stats.filesDeleted
-                4 -> "+${commit.stats.linesAdded}/-${commit.stats.linesDeleted}"
+                5 -> commit.stats.filesModified + commit.stats.filesAdded + commit.stats.filesDeleted
+                6 -> "+${commit.stats.linesAdded}/-${commit.stats.linesDeleted}"
                 else -> ""
             }
         }
 
         override fun getColumnClass(columnIndex: Int): Class<*> {
             return when (columnIndex) {
-                3 -> Integer::class.java
+                5 -> Integer::class.java
                 else -> String::class.java
             }
         }

@@ -30,9 +30,12 @@ class FilterPanel(
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd")
 
     private val startDateField = JFormattedTextField(dateFormat).apply {
-        // Default to 3 months ago
+        // Default to today (beginning of day)
         val calendar = Calendar.getInstance()
-        calendar.add(Calendar.MONTH, -3)
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
         value = calendar.time
         columns = 10
     }
