@@ -13,14 +13,34 @@ An IntelliJ plugin that provides comprehensive Git commit statistics and real-ti
 
 ### Git Commit Statistics Tool Window
 - **Summary Statistics**: View total commits, files changed (modified/added/deleted), and lines changed at a glance
-- **Detailed Commit List**: Browse commits with sortable columns showing hash, date, message, file count, and line changes
-- **Quick Navigation**: Double-click any commit to instantly open it in IDEA's VCS Log window for detailed inspection
+- **Detailed Commit List**: Browse commits with sortable columns including:
+  - Commit hash (short form)
+  - Author name and email
+  - Date and time
+  - Commit message
+  - File count and line changes
+- **Quick Navigation**: Double-click any commit to instantly open it in IDEA's VCS Log window with the diff view automatically displayed
+- **File Hotspot Analysis**: New dedicated tab showing your top 10 most frequently modified files
+  - Displays modification count and total lines changed per file
+  - Helps identify code hotspots and potential problem areas
+  - Double-click any hotspot file to filter and view all commits that modified it
+- **Large Commit Detection**: Visual warnings for commits exceeding 500 lines
+  - Yellow background highlighting in commit table
+  - Warning icon with explanatory tooltip
+  - Smart commit size management encourages better practices
 
 ### Status Bar Statistics
 - **Real-time Statistics**: See file and line change counts update instantly as you select or deselect files in the commit dialog
 - **File Change Tracking**: Track modified, added, and deleted files with accurate counts
 - **Line Change Analysis**: View additions (+) and deletions (-) across all selected changes
 - **Binary File Detection**: Automatically identifies and counts binary files separately
+
+### Commit Quality Checks
+- **Large Commit Warning**: Optional check in the Commit Checks panel
+  - Validates commit size before committing (threshold: 500 lines)
+  - Shows confirmation dialog explaining why large commits should be avoided
+  - Helps maintain code review quality and Git history readability
+  - Can be enabled/disabled via checkbox in commit panel
 
 ## Compatibility
 
@@ -69,10 +89,22 @@ Compatible with IntelliJ 2025.3+.
 
 5. **Navigate to Commits**:
    - **Double-click** any commit row in the commit list
-   - The VCS Log window will automatically open and navigate to that specific commit
+   - The VCS Log window will automatically open with the diff view displayed
    - The commit will be highlighted with a hash filter applied for easy identification
 
-6. **Auto-refresh**: Enable/disable the "Auto-refresh" checkbox to control automatic updates when filters change
+6. **Analyze File Hotspots**:
+   - Switch to the "File Hotspots" tab to see your most frequently modified files
+   - The list shows modification count and total lines changed
+   - **Double-click** any file to switch back to the Commits tab with a filtered view
+   - The Commits tab will show only commits that modified the selected file
+   - Useful for identifying problem areas or files that need refactoring
+
+7. **Identify Large Commits**:
+   - Large commits (>500 lines) are highlighted with a yellow background
+   - Hover over the warning icon in the Lines column to see the explanation
+   - Consider splitting large commits into smaller, focused changes for better code review
+
+8. **Auto-refresh**: Enable/disable the "Auto-refresh" checkbox to control automatic updates when filters change
 
 ### Status Bar Statistics
 
@@ -94,6 +126,22 @@ Compatible with IntelliJ 2025.3+.
    - Total lines deleted
 
 5. **Stay Informed**: Use these statistics to ensure your commits are appropriately scoped and organized
+
+### Commit Quality Checks
+
+1. **Enable Large Commit Check**:
+   - In the commit panel, look for "Commit Checks" section
+   - Check the box "Check for large commits (>500 lines)"
+   - This check is enabled by default to encourage best practices
+
+2. **Commit with Check Enabled**:
+   - If your commit exceeds 500 lines, a warning dialog will appear
+   - The dialog shows the total line count and explains why large commits should be avoided
+   - Choose "Proceed Anyway" to continue or "Cancel" to revise your commit
+
+3. **Disable When Needed**:
+   - Uncheck the box to skip the large commit check
+   - Useful for intentional large commits (e.g., initial imports, major refactorings)
 
 ### Example Display Formats
 
