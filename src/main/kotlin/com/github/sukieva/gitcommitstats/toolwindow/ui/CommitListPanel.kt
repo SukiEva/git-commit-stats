@@ -78,8 +78,10 @@ class CommitListPanel(
                     if (column == 6 && isLargeCommit) {
                         icon = AllIcons.General.Warning
                         horizontalTextPosition = SwingConstants.LEADING
+                        toolTipText = MyBundle.message("toolwindow.commits.largeCommit.tooltip")
                     } else {
                         icon = null
+                        toolTipText = null
                     }
                 }
             }
