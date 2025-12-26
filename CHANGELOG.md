@@ -4,19 +4,19 @@
 
 ## [Unreleased]
 
+## [1.4.0] - 2025-12-26
+
 ### Added
 
 - **File Hotspot Analysis**: New "File Hotspots" tab showing top 10 most frequently modified files
   - Displays modification count and total lines changed per file
   - Helps identify code hotspots and potential problem areas
   - Double-click navigation to filter commits that modified the file
-
 - **Large Commit Detection**: Visual warnings and checks for commits exceeding 500 lines
   - Yellow background highlighting in commit table
   - Warning icon with tooltip in the lines column
   - Optional commit check that prompts confirmation before committing large changes
   - Checkbox in Commit Checks panel to enable/disable the check
-
 - **Enhanced UI Interactions**:
   - Double-click hotspot files to jump to filtered commit list
   - Tooltip on large commit warning icon explaining the threshold
@@ -28,7 +28,6 @@
   - Selection now preserved during data refresh
   - Added proper state management with isUpdating flag
   - Initial empty item to prevent blank display
-
 - **Accurate Line Counting**: File hotspots now use real diff calculations
   - Replaced rough estimates with actual line additions/deletions
   - Provides accurate code churn metrics per file
@@ -67,7 +66,8 @@
 - Line counts (additions, deletions)
 - Binary file detection
 
-[Unreleased]: https://github.com/SukiEva/git-commit-stats/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/SukiEva/git-commit-stats/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/SukiEva/git-commit-stats/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/SukiEva/git-commit-stats/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/SukiEva/git-commit-stats/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/SukiEva/git-commit-stats/compare/v1.0.0...v1.1.0
