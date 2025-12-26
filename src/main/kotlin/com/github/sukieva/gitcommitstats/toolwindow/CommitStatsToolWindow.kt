@@ -43,17 +43,19 @@ class CommitStatsToolWindow(private val project: Project) : JBPanel<JBPanel<*>>(
     private val hotspotPanel = FileHotspotPanel()
 
     private val loadingLabel = JBLabel(MyBundle.message("toolwindow.loading"), SwingConstants.CENTER)
+    private val contentPanel = JBPanel<JBPanel<*>>(BorderLayout())
 
     private var currentJob: Job? = null
 
     init {
         layout = BorderLayout()
 
-        // Top: Filter panel
+        // Top: Filter panel (fixed, never removed)
         add(filterPanel, BorderLayout.NORTH)
 
-        // Center: Loading label (will be replaced with content)
-        add(loadingLabel, BorderLayout.CENTER)
+        // Center: Content panel (will be updated with different views)
+        contentPanel.add(loadingLabel, BorderLayout.CENTER)
+        add(contentPanel, BorderLayout.CENTER)
 
         // Load authors and trigger initial data load
         scope.launch {
@@ -133,30 +135,27 @@ class CommitStatsToolWindow(private val project: Project) : JBPanel<JBPanel<*>>(
 
     private fun showLoading(loading: Boolean) {
         if (loading) {
-            removeAll()
-            add(filterPanel, BorderLayout.NORTH)
-            add(loadingLabel, BorderLayout.CENTER)
-            revalidate()
-            repaint()
+            contentPanel.removeAll()
+            contentPanel.add(loadingLabel, BorderLayout.CENTER)
+            contentPanel.revalidate()
+            contentPanel.repaint()
         }
     }
 
     private fun showEmptyState() {
-        removeAll()
-        add(filterPanel, BorderLayout.NORTH)
+        contentPanel.removeAll()
         val emptyLabel = JBLabel(MyBundle.message("toolwindow.empty.noCommits"), SwingConstants.CENTER)
-        add(emptyLabel, BorderLayout.CENTER)
-        revalidate()
-        repaint()
+        contentPanel.add(emptyLabel, BorderLayout.CENTER)
+        contentPanel.revalidate()
+        contentPanel.repaint()
     }
 
     private fun showError(message: String) {
-        removeAll()
-        add(filterPanel, BorderLayout.NORTH)
+        contentPanel.removeAll()
         val errorLabel = JBLabel("Error: $message", SwingConstants.CENTER)
-        add(errorLabel, BorderLayout.CENTER)
-        revalidate()
-        repaint()
+        contentPanel.add(errorLabel, BorderLayout.CENTER)
+        contentPanel.revalidate()
+        contentPanel.repaint()
     }
 
     private fun updateUI(
@@ -169,8 +168,7 @@ class CommitStatsToolWindow(private val project: Project) : JBPanel<JBPanel<*>>(
         hotspotPanel.updateHotspots(hotspots)
 
         // Build content layout
-        removeAll()
-        add(filterPanel, BorderLayout.NORTH)
+        contentPanel.removeAll()
 
         // Create tabbed pane
         val tabbedPane = JBTabbedPane()
@@ -184,10 +182,10 @@ class CommitStatsToolWindow(private val project: Project) : JBPanel<JBPanel<*>>(
         // Hotspots tab
         tabbedPane.addTab(MyBundle.message("toolwindow.tab.hotspots"), hotspotPanel)
 
-        add(tabbedPane, BorderLayout.CENTER)
+        contentPanel.add(tabbedPane, BorderLayout.CENTER)
 
-        revalidate()
-        repaint()
+        contentPanel.revalidate()
+        contentPanel.repaint()
     }
 
     private fun onCommitDoubleClick(hash: String) {
