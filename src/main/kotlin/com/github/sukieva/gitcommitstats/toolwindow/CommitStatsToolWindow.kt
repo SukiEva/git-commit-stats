@@ -7,9 +7,12 @@ import com.github.sukieva.gitcommitstats.toolwindow.service.CommitStatsAdapter
 import com.github.sukieva.gitcommitstats.toolwindow.service.GitQueryService
 import com.github.sukieva.gitcommitstats.toolwindow.service.StatsAggregator
 import com.github.sukieva.gitcommitstats.toolwindow.service.VcsLogNavigationService
+import com.github.sukieva.gitcommitstats.toolwindow.service.FileHotspotAnalyzer
 import com.github.sukieva.gitcommitstats.toolwindow.ui.CommitListPanel
+import com.github.sukieva.gitcommitstats.toolwindow.ui.FileHotspotPanel
 import com.github.sukieva.gitcommitstats.toolwindow.ui.FilterPanel
 import com.github.sukieva.gitcommitstats.toolwindow.ui.SummaryPanel
+import com.intellij.ui.components.JBTabbedPane
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.EDT
 import com.intellij.openapi.components.service
@@ -32,10 +35,12 @@ class CommitStatsToolWindow(private val project: Project) : JBPanel<JBPanel<*>>(
     private val vcsLogNavService = project.service<VcsLogNavigationService>()
     private val adapter = CommitStatsAdapter(project)
     private val aggregator = StatsAggregator()
+    private val hotspotAnalyzer = FileHotspotAnalyzer()
 
     private val filterPanel = FilterPanel(::refreshData)
     private val summaryPanel = SummaryPanel()
     private val commitListPanel = CommitListPanel { hash -> onCommitDoubleClick(hash) }
+    private val hotspotPanel = FileHotspotPanel()
 
     private val loadingLabel = JBLabel(MyBundle.message("toolwindow.loading"), SwingConstants.CENTER)
 
@@ -106,9 +111,12 @@ class CommitStatsToolWindow(private val project: Project) : JBPanel<JBPanel<*>>(
                 // Aggregate stats
                 val authorStats = aggregator.aggregate(commitsWithStats)
 
+                // Analyze file hotspots
+                val hotspots = hotspotAnalyzer.analyzeHotspots(commitsWithStats, commits, topN = 10)
+
                 // Update UI
                 withContext(Dispatchers.EDT) {
-                    updateUI(authorStats)
+                    updateUI(authorStats, hotspots)
                     showLoading(false)
                 }
 
@@ -151,20 +159,32 @@ class CommitStatsToolWindow(private val project: Project) : JBPanel<JBPanel<*>>(
         repaint()
     }
 
-    private fun updateUI(stats: com.github.sukieva.gitcommitstats.toolwindow.model.AuthorStats) {
+    private fun updateUI(
+        stats: com.github.sukieva.gitcommitstats.toolwindow.model.AuthorStats,
+        hotspots: List<com.github.sukieva.gitcommitstats.toolwindow.model.FileHotspot>
+    ) {
         // Update panels
         summaryPanel.updateStats(stats)
         commitListPanel.updateCommits(stats.commits)
+        hotspotPanel.updateHotspots(hotspots)
 
         // Build content layout
         removeAll()
         add(filterPanel, BorderLayout.NORTH)
 
-        val contentPanel = JBPanel<JBPanel<*>>(BorderLayout())
-        contentPanel.add(summaryPanel, BorderLayout.NORTH)
-        contentPanel.add(commitListPanel, BorderLayout.CENTER)
+        // Create tabbed pane
+        val tabbedPane = JBTabbedPane()
 
-        add(contentPanel, BorderLayout.CENTER)
+        // Commits tab
+        val commitsTab = JBPanel<JBPanel<*>>(BorderLayout())
+        commitsTab.add(summaryPanel, BorderLayout.NORTH)
+        commitsTab.add(commitListPanel, BorderLayout.CENTER)
+        tabbedPane.addTab(MyBundle.message("toolwindow.tab.commits"), commitsTab)
+
+        // Hotspots tab
+        tabbedPane.addTab(MyBundle.message("toolwindow.tab.hotspots"), hotspotPanel)
+
+        add(tabbedPane, BorderLayout.CENTER)
 
         revalidate()
         repaint()

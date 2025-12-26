@@ -2,12 +2,16 @@ package com.github.sukieva.gitcommitstats.toolwindow.ui
 
 import com.github.sukieva.gitcommitstats.MyBundle
 import com.github.sukieva.gitcommitstats.toolwindow.model.CommitWithStats
+import com.intellij.icons.AllIcons
+import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.table.JBTable
 import java.awt.BorderLayout
+import java.awt.Component
 import java.text.SimpleDateFormat
-import javax.swing.JPanel
+import javax.swing.*
 import javax.swing.table.AbstractTableModel
+import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.TableRowSorter
 
 class CommitListPanel(
@@ -26,6 +30,10 @@ class CommitListPanel(
         table.rowSorter = TableRowSorter(tableModel)
         table.autoCreateRowSorter = true
 
+        // Set custom renderer for large commit highlighting
+        table.setDefaultRenderer(Any::class.java, LargeCommitRenderer())
+        table.setDefaultRenderer(Integer::class.java, LargeCommitRenderer())
+
         // Add double-click listener
         table.addMouseListener(object : java.awt.event.MouseAdapter() {
             override fun mouseClicked(e: java.awt.event.MouseEvent) {
@@ -39,6 +47,45 @@ class CommitListPanel(
                 }
             }
         })
+    }
+
+    private inner class LargeCommitRenderer : DefaultTableCellRenderer() {
+        override fun getTableCellRendererComponent(
+            table: JTable?,
+            value: Any?,
+            isSelected: Boolean,
+            hasFocus: Boolean,
+            row: Int,
+            column: Int
+        ): Component {
+            val component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+
+            if (table != null && row >= 0 && row < table.rowCount) {
+                val modelRow = table.convertRowIndexToModel(row)
+                val commit = tableModel.getCommitAt(modelRow)
+
+                if (commit != null) {
+                    val totalLines = commit.stats.linesAdded + commit.stats.linesDeleted
+                    val isLargeCommit = totalLines > 500
+
+                    if (isLargeCommit && !isSelected) {
+                        component.background = JBColor.YELLOW.darker().darker()
+                    } else if (!isSelected) {
+                        component.background = table.background
+                    }
+
+                    // Add warning icon to the lines column
+                    if (column == 6 && isLargeCommit) {
+                        icon = AllIcons.General.Warning
+                        horizontalTextPosition = SwingConstants.LEADING
+                    } else {
+                        icon = null
+                    }
+                }
+            }
+
+            return component
+        }
     }
 
     fun updateCommits(commits: List<CommitWithStats>) {
@@ -98,6 +145,14 @@ class CommitListPanel(
         fun getCommitHashAt(rowIndex: Int): String? {
             return if (rowIndex in commits.indices) {
                 commits[rowIndex].hash
+            } else {
+                null
+            }
+        }
+
+        fun getCommitAt(rowIndex: Int): CommitWithStats? {
+            return if (rowIndex in commits.indices) {
+                commits[rowIndex]
             } else {
                 null
             }
