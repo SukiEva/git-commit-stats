@@ -1,6 +1,7 @@
 package com.github.sukieva.gitcommitstats.toolwindow.ui
 
 import com.github.sukieva.gitcommitstats.MyBundle
+import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.components.JBCheckBox
 import java.awt.FlowLayout
@@ -21,11 +22,13 @@ class FilterPanel(
     private val onFilterChanged: (author: String?, startDate: Date?, endDate: Date?) -> Unit
 ) : JPanel() {
 
+    private val logger = thisLogger()
     private var allAuthors: List<String> = emptyList()
     private var isUpdating = false
 
     private val authorComboBox = ComboBox<String>().apply {
         isEditable = true  // Allow manual input
+        addItem("")  // Add initial empty item
     }
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd")
 
@@ -186,6 +189,7 @@ class FilterPanel(
     }
 
     fun setAuthors(authors: List<String>) {
+        logger.info("Loaded ${authors.size} authors for filter dropdown")
         allAuthors = authors
 
         // Preserve current selection
@@ -201,6 +205,10 @@ class FilterPanel(
             if (currentSelection != null && (currentSelection in authors || currentSelection == "")) {
                 authorComboBox.selectedItem = currentSelection
             }
+
+            // Force UI refresh
+            authorComboBox.revalidate()
+            authorComboBox.repaint()
         } finally {
             isUpdating = false
         }
